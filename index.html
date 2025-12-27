@@ -151,29 +151,27 @@ function subirFotos() {
     const reader = new FileReader();
 
     reader.onload = () => {
-      fetch(WEB_APP_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: Date.now() + "_" + file.name,
-          type: file.type,
-          base64: reader.result.split(",")[1]
-        })
-      })
-      .then(r => r.json())
-      .then(resp => {
-        if (!resp.ok) throw new Error();
-        uploaded++;
-        if (uploaded === files.length) {
-          status.innerText = "¡Gracias por compartir tus recuerdos! ✨💛";
-          sound.play();
-          glow(box);
-          confeti();
-        }
-      })
-      .catch(() => {
-        status.innerText = "Error al subir las fotos 😕";
-      });
+     fetch(WEB_APP_URL, {
+  method: "POST",
+  mode: "no-cors",
+  body: JSON.stringify({
+    name: Date.now() + "_" + file.name,
+    type: file.type,
+    base64: reader.result.split(",")[1]
+  })
+})
+.then(() => {
+  uploaded++;
+  if (uploaded === files.length) {
+    status.innerText = "¡Gracias por compartir tus recuerdos! ✨💛";
+    sound.play();
+    glow(box);
+    confeti();
+  }
+})
+.catch(() => {
+  status.innerText = "Error al subir las fotos 😕";
+});
     };
 
     reader.readAsDataURL(file);
@@ -203,6 +201,7 @@ function confeti() {
 
 </body>
 </html>
+
 
 
 
