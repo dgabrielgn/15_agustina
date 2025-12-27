@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis 15 Años - Agustina</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.88)),
+    url("agustina.jpg") center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f5f5f5;
+  overflow: hidden;
+}
+
+.container {
+  background: rgba(0,0,0,0.85);
+  border: 2px solid #c9b037;
+  border-radius: 22px;
+  padding: 30px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 35px rgba(201,176,55,0.5);
+  position: relative;
+  z-index: 2;
+}
+
+h1 {
+  font-size: 2.3em;
+  color: #c9b037;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 1.4em;
+  color: #dcdcdc;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #e6e6e6;
+  margin-bottom: 25px;
+}
+
+input[type="file"] { display: none; }
+
+label {
+  display: inline-block;
+  background: linear-gradient(135deg, #c9b037, #e6e6e6);
+  color: #000;
+  padding: 14px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  background: linear-gradient(135deg, #c9b037, #a89c2c);
+  color: #000;
+  border: none;
+  padding: 15px;
+  border-radius: 30px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.status {
+  margin-top: 15px;
+  color: #dcdcdc;
+}
+
+/* ✨ Glow */
+.flash {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  animation: glow 1s ease;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 0 rgba(201,176,55,0); }
+  50% { box-shadow: 0 0 45px rgba(201,176,55,0.9); }
+  100% { box-shadow: 0 0 0 rgba(201,176,55,0); }
+}
+
+/* 🎊 Confeti */
+.confetti {
+  position: fixed;
+  top: -10px;
+  width: 10px;
+  height: 14px;
+  opacity: 0.9;
+  animation: fall linear forwards;
+  z-index: 1;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="box">
+  <h1>Mis 15 Años</h1>
+  <h2>Agustina</h2>
+  <p>Comparte conmigo tus mejores momentos de esta noche.</p>
+
+  <label for="file">📸 Seleccionar fotos</label>
+  <input type="file" id="file" accept="image/*" multiple>
+
+  <button onclick="subirFotos()">Subir fotos</button>
+  <div class="status" id="status"></div>
+</div>
+
+<audio id="sound" src="success.mp3" preload="auto"></audio>
+
+<script>
+const WEB_APP_URL = "https://github.com/dgabrielgn/15_agustina.git";
+
+function subirFotos() {
+  const files = document.getElementById('file').files;
+  const status = document.getElementById('status');
+  const sound = document.getElementById('sound');
+  const box = document.getElementById('box');
+
+  if (files.length === 0) {
+    status.innerText = "Seleccioná al menos una foto 📷";
+    return;
+  }
+
+  status.innerText = "Subiendo fotos... ⏳";
+  let uploaded = 0;
+
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          name: Date.now() + "_" + file.name,
+          type: file.type,
+          base64: reader.result.split(",")[1]
+        })
+      }).then(() => {
+        uploaded++;
+        if (uploaded === files.length) {
+          status.innerText = "¡Gracias por compartir tus recuerdos! ✨💛";
+          sound.play();
+          lanzarGlow(box);
+          lanzarConfeti();
+        }
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function lanzarGlow(box) {
+  const flash = document.createElement("div");
+  flash.className = "flash";
+  box.appendChild(flash);
+  setTimeout(() => flash.remove(), 1000);
+}
+
+function lanzarConfeti() {
+  const colores = ["#c9b037", "#e6e6e6"];
+  for (let i = 0; i < 60; i++) {
+    const confeti = document.createElement("div");
+    confeti.className = "confetti";
+    confeti.style.left = Math.random() * 100 + "vw";
+    confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+    confeti.style.animationDuration = (2 + Math.random() * 2) + "s";
+    document.body.appendChild(confeti);
+    setTimeout(() => confeti.remove(), 4000);
+  }
+}
+</script>
+
+</body>
+</html>
