@@ -21,14 +21,14 @@ body {
 }
 
 .container {
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.88);
   border: 2px solid #c9b037;
   border-radius: 22px;
   padding: 30px;
   max-width: 420px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 0 35px rgba(201,176,55,0.5);
+  box-shadow: 0 0 35px rgba(201,176,55,0.6);
   position: relative;
   z-index: 2;
 }
@@ -80,7 +80,7 @@ button {
   color: #dcdcdc;
 }
 
-/* ✨ Glow */
+/* Glow */
 .flash {
   position: absolute;
   inset: 0;
@@ -95,7 +95,7 @@ button {
   100% { box-shadow: 0 0 0 rgba(201,176,55,0); }
 }
 
-/* 🎊 Confeti */
+/* Confeti */
 .confetti {
   position: fixed;
   top: -10px;
@@ -131,7 +131,7 @@ button {
 <audio id="sound" src="success.mp3" preload="auto"></audio>
 
 <script>
-const WEB_APP_URL = "https://github.com/dgabrielgn/15_agustina.git";
+const WEB_APP_URL = "PEGÁ_ACÁ_LA_NUEVA_URL_DEL_WEB_APP";
 
 function subirFotos() {
   const files = document.getElementById('file').files;
@@ -139,7 +139,7 @@ function subirFotos() {
   const sound = document.getElementById('sound');
   const box = document.getElementById('box');
 
-  if (files.length === 0) {
+  if (!files.length) {
     status.innerText = "Seleccioná al menos una foto 📷";
     return;
   }
@@ -149,48 +149,59 @@ function subirFotos() {
 
   Array.from(files).forEach(file => {
     const reader = new FileReader();
+
     reader.onload = () => {
       fetch(WEB_APP_URL, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: Date.now() + "_" + file.name,
           type: file.type,
           base64: reader.result.split(",")[1]
         })
-      }).then(() => {
+      })
+      .then(r => r.json())
+      .then(resp => {
+        if (!resp.ok) throw new Error();
         uploaded++;
         if (uploaded === files.length) {
           status.innerText = "¡Gracias por compartir tus recuerdos! ✨💛";
           sound.play();
-          lanzarGlow(box);
-          lanzarConfeti();
+          glow(box);
+          confeti();
         }
+      })
+      .catch(() => {
+        status.innerText = "Error al subir las fotos 😕";
       });
     };
+
     reader.readAsDataURL(file);
   });
 }
 
-function lanzarGlow(box) {
-  const flash = document.createElement("div");
-  flash.className = "flash";
-  box.appendChild(flash);
-  setTimeout(() => flash.remove(), 1000);
+function glow(box) {
+  const f = document.createElement("div");
+  f.className = "flash";
+  box.appendChild(f);
+  setTimeout(() => f.remove(), 1000);
 }
 
-function lanzarConfeti() {
+function confeti() {
   const colores = ["#c9b037", "#e6e6e6"];
   for (let i = 0; i < 60; i++) {
-    const confeti = document.createElement("div");
-    confeti.className = "confetti";
-    confeti.style.left = Math.random() * 100 + "vw";
-    confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
-    confeti.style.animationDuration = (2 + Math.random() * 2) + "s";
-    document.body.appendChild(confeti);
-    setTimeout(() => confeti.remove(), 4000);
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+    c.style.animationDuration = (2 + Math.random() * 2) + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
   }
 }
 </script>
 
 </body>
 </html>
+
+
