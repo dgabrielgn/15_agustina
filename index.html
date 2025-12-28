@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mis 15 Años - Agustina</title>
+  
+ <!-- Fuente manuscrita -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -22,7 +25,7 @@ background:
 }
 
 .container {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.5);
   border: 2px solid #c9b037;
   border-radius: 16px;
   padding: 18px 16px;
@@ -35,15 +38,23 @@ background:
 }
 
 h1 {
-  font-size: 2.3em;
-  color: #c9b037;
-  margin-bottom: 5px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.4em;
+  color: #f5d76e;
+  margin-bottom: 4px;
+  text-shadow:
+    0 0 6px rgba(201,176,55,0.9),
+    0 0 14px rgba(201,176,55,0.6);
 }
 
 h2 {
-  font-size: 1.4em;
-  color: #dcdcdc;
-  margin-bottom: 15px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.6em;
+  color: #ffffff;
+  margin-bottom: 16px;
+  text-shadow:
+    0 0 5px rgba(255,255,255,0.6),
+    0 0 10px rgba(201,176,55,0.5);
 }
 
 p {
@@ -90,10 +101,14 @@ button {
   pointer-events: none;
 }
 
-@keyframes glow {
-  0% { box-shadow: 0 0 0 rgba(201,176,55,0); }
-  50% { box-shadow: 0 0 45px rgba(201,176,55,0.9); }
-  100% { box-shadow: 0 0 0 rgba(201,176,55,0); }
+@keyframes shimmer {
+  0% { text-shadow: 0 0 6px rgba(201,176,55,0.6); }
+  50% { text-shadow: 0 0 14px rgba(201,176,55,1); }
+  100% { text-shadow: 0 0 6px rgba(201,176,55,0.6); }
+}
+
+h1 {
+  animation: shimmer 3s infinite;
 }
 
 /* Confeti */
@@ -233,6 +248,7 @@ function compressImage(file) {
 
 </body>
 </html>
+
 
 
 
