@@ -162,7 +162,7 @@ async function subirFotos() {
         method: "POST",
         mode: "no-cors",
         body: JSON.stringify({
-          name: Date.now() + ".jpg",
+          name: Date.now() + "_" + Math.random().toString(36).slice(2) + ".jpg",
           type: "image/jpeg",
           base64: base64
         })
@@ -232,6 +232,7 @@ function compressImage(file) {
 
 </body>
 </html>
+
 
 
 
